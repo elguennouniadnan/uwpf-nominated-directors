@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Custom CSS for better styling -->
+    <style>
+        :root {
+            --bs-primary: #6366f1;
+            --bs-primary-rgb: 99, 102, 241;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .jarallax {
+            position: relative;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .overlay {
+            position: relative;
+        }
+
+        .overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        .overlay>* {
+            position: relative;
+            z-index: 2;
+        }
+
+        .py-10 {
+            padding-top: 6rem;
+            padding-bottom: 6rem;
+        }
+
+        .py-md-14 {
+            padding-top: 8rem;
+            padding-bottom: 8rem;
+        }
+
+        .py-8 {
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+        }
+
+        .py-md-11 {
+            padding-top: 6rem;
+            padding-bottom: 6rem;
+        }
+
+        .mb-8 {
+            margin-bottom: 4rem;
+        }
+
+        .mb-6 {
+            margin-bottom: 3rem;
+        }
+
+        .shape {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 2;
+        }
+
+        .shape svg {
+            width: 100%;
+            height: auto;
+        }
+
+        .nominee-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .nominee-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .btn-primary {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        .btn-primary:hover {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+        }
+
+        .text-primary {
+            color: var(--bs-primary) !important;
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        #back-to-top:hover {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+        }
+    </style>
+
+    <!-- Title -->
+    <title>Unified World Pickleball Federation - Nominated Directors</title>
+</head>
+
+<body class="bg-white">
+
+    <!-- Hero Section -->
+    <section style="text-align: center; padding: 1rem 0 4rem 0; position: relative;">
+        <img src="WPF Logo and title.png" alt="Unified World Pickleball Federation" style="max-width: 60%; height: auto; display: block; margin: 2.5rem auto 2.5rem auto;">
+        
+        <!-- Curved Separator -->
+        <div style="position: absolute; bottom: 0; left: 0; width: 100%; overflow: hidden; line-height: 0;">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" style="position: relative; display: block; width: calc(100% + 1.3px); height: 60px;">
+                <path d="M0,0 C150,80 350,80 600,40 C850,0 1050,80 1200,40 V120 H0 V0 Z" style="fill: #f8f9fa;"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- NOMINEES SECTION -->
+    <section class="py-8 py-md-11 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="display-3 text-primary mb-8">
+                        Meet our Nominated Directors
+                    </h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="text-primary mb-4">National Director Nominations</h2>
+                    <p class="lead mb-6">
+                        Members will need to vote in an online election.
+                        The vote will close at 11:59 PM on Saturday, August 30th, 2025. Members will receive voting
+                        links via
+                        email.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Dynamically render nominee cards -->
+            <div class="row mb-8 pb-6 border-bottom">
+                <div class="col-12">
+                    <div id="nominee-cards"
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; justify-items: center;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p>&copy; 2025 Unified World Pickleball Federation. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to top button -->
+    <a id="back-to-top" data-bs-toggle="tooltip" title="Back to top" class="btn btn-primary btn-lg rounded-circle"
+        href="javascript:void(0);" style="display: none;">
+        <i class="fas fa-chevron-up"></i>
+    </a>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Main JavaScript -->
+    <script>
+        // Nominee Data
+        const nomineeData = [
+            {
+                country: "Poland",
+                name: "Tomasz Gonsiorczyk",
+                photo: "assets/img/tomasz.jpg",
+                app: "assets/nomineesApplications/Tomasz-Gonsiorczyk-app.pdf",
+                resume: "assets/resumes/CV-Tomasz-Gonsiorczyk.pdf",
+                recommendations: []
+            },
+            {
+                country: "Iran",
+                name: "Hassan Mohajer",
+                photo: "assets/img/Mohajer.png",
+                app: "assets/nomineesApplications/Hassan-Mohajer-app.pdf",
+                resume: "assets/resumes/CV-Hasan-Mohajer.pdf",
+                recommendations: []
+            },
+            {
+                country: "Spain",
+                name: "Miguel Montaño Freire",
+                photo: "assets/img/Miguel-Montano.png",
+                app: "assets/nomineesApplications/Miguel-Montaño-Freire-app.pdf",
+                resume: "assets/resumes/CV-Miguel-Montano.pdf",
+                recommendations: []
+            },
+            {
+                country: "Pakistan",
+                name: "Rana Fakhar Saeed",
+                photo: "assets/img/Rana-Fakhar.png",
+                app: "assets/nomineesApplications/Rana-Fakhar-Saeed-app.pdf",
+                resume: "assets/resumes/CV-Rana-Fakhar-Saeed.pdf",
+                recommendations: []
+            },
+            {
+                country: "Malaysia",
+                name: "Kelvin Yii Lee Wuen",
+                photo: "assets/img/Kelvin-YiI.png",
+                resume: "assets/resumes/CV-Kelvin-Yii.pdf",
+                recommendations: ["Nominated By Pickleball Malaysia", "Recommended by Arvind R. Prabhoo"]
+            },
+            {
+                country: "United States",
+                name: "Marlon Schulman",
+                photo: "assets/img/MLlegal.jpg",
+                app: "assets/nomineesApplications/Marlon-Schulman-app.pdf",
+                resume: "assets/resumes/CV-Marlon-Schulman.pdf",
+                recommendations: ["assets/endorsements/reference-marlon-schulman.pdf", "Endorsed by Arvind R. Prabhoo", "Recommended by Karen Mitchell"]
+            },
+            {
+                country: "Singapore",
+                name: "Jimmy Tan",
+                photo: "assets/img/Jimmy-Tan.png",
+                app: "assets/nomineesApplications/Jimmy-Tan-app.pdf",
+                resume: "assets/resumes/CV-Jimmy-Tan.pdf",
+                recommendations: []
+            },
+            {
+                country: "Scotland",
+                name: "Anne Smillie",
+                photo: "assets/img/Anne-Smillie.png",
+                app: "assets/nomineesApplications/Anne-Smillie-app.pdf",
+                resume: "assets/resumes/CV-Anne-Smillie.pdf",
+                recommendations: ["assets/endorsements/Endorsement-Anne-Smilie.pdf", "Endorsed by Mhairi Adam", "Recommended by Karen Mitchell"]
+            },
+            {
+                country: "Uganda",
+                name: "Robert Bakaze",
+                photo: "assets/img/avatar-man.png",
+                app: "assets/nomineesApplications/Robert-Bakaze-app.pdf",
+                resume: "assets/resumes/CV-Robert-Bakaze.pdf",
+                recommendations: []
+            },
+            {
+                country: "Bulgaria",
+                name: "Gergin Nedyalkov Angelov",
+                photo: "assets/img/Gergin-Angelov.png",
+                app: "assets/nomineesApplications/Gergin-Nedyalkov-Angelov-app.pdf",
+                resume: "assets/resumes/CV-Gergin-Angelov.pdf",
+                recommendations: ["assets/endorsements/Letter-Gergin-Angelov.pdf", "Recommended by the Bulgarian Pickleball Federation"]
+            },
+            {
+                country: "Nepal",
+                name: "Lt Col Phatya Bahadur Khadka",
+                photo: "assets/img/avatar-man.png",
+                app: "assets/nomineesApplications/Phatya-Bahadur-Khadka-app.pdf",
+                resume: "assets/resumes/CV-Phatya-Bahadur-Khadka.pdf",
+                recommendations: ["assets/endorsements/NominationLetter-Phatya-bahadur.pdf", "Nominated by Mukunda Prasad Bhandari"]
+            },
+            {
+                country: "Russia",
+                name: "Bocharov Riourik",
+                photo: "assets/img/avatar-man.png",
+                app: "assets/nomineesApplications/Bocharov-Riourik-app.pdf",
+                recommendations: []
+            },
+            {
+                country: "India",
+                name: "Sunil Valavalkar",
+                photo: "assets/img/Sunil-Valavalkar.png",
+                app: "assets/nomineesApplications/Sunil-Valavalkar-app.pdf",
+                recommendations: ["assets/endorsements/Recommendation-Sunil-Valavalkar.pdf", "Recommended by Chetan Sanil"]
+            },
+            {
+                country: "Hong Kong",
+                name: "Yeung Ka Man",
+                photo: "assets/img/avatar-man.png",
+                app: "assets/nomineesApplications/Yeung-Ka-Man-app.pdf",
+                recommendations: []
+            },
+            {
+                country: "Hong Kong",
+                name: "Wu Tsz Ling",
+                photo: "assets/img/avatar-women.png",
+                app: "assets/nomineesApplications/Cheryl-Wu-App.pdf",
+                recommendations: []
+            },
+            {
+                country: "Hong Kong",
+                name: "Chuk Waj",
+                photo: "assets/img/avatar-man.png",
+                app: "assets/nomineesApplications/Jonathan-Chuk-app.pdf",
+                recommendations: []
+            },
+            {
+                country: "UK",
+                name: "Mahesh Desai",
+                photo: "assets/img/avatar-man.png",
+                app: "assets/nomineesApplications/Mahesh-Desai-app.pdf",
+                resume: "assets/resumes/CV-Mahesh-Desai.pdf",
+                recommendations: ["Recommended by Karen Mitchell"]
+            },
+            {
+                country: "France",
+                name: "Jean Paul Bagot",
+                photo: "assets/img/Jean-Paul-Bagot.png",
+                app: "assets/nomineesApplications/Jean-Paul-Bagot-app .pdf",
+                resume: "assets/resumes/CV-Jean-Paul-Bagot.pdf",
+                recommendations: ["Endorsed by Pierre Obozinski"]
+            },
+            {
+                country: "Italy",
+                name: "Soresina Giulia",
+                photo: "assets/img/Giulia-Soresina.png",
+                app: "assets/nomineesApplications/Giulia-Soresina-app.pdf",
+                resume: "assets/resumes/CV-Giulia-Soresina.pdf",
+                recommendations: ["Recommended by Karen Mitchell"]
+            },
+            {
+                country: "China",
+                name: "Allen Zeng",
+                photo: "assets/img/Allen-Zeng.png",
+                app: "assets/nomineesApplications/Allen-Zeng-app.pdf",
+                resume: "assets/resumes/CV-Allen-Zeng.pdf",
+                recommendations: ["Nominated by Hong Shi"]
+            },
+            {
+                country: "Japan",
+                name: "Rika Riordan",
+                photo: "assets/img/Rika-Riordan.png",
+                app: "assets/nomineesApplications/Rika-Riordan-app.pdf",
+                resume: "assets/resumes/CV-Rika-Riordan.pdf",
+                recommendations: ["Recommended by Seymour Rifkin"]
+            },
+            {
+                country: "Greece",
+                name: "Anastasios Pantazidis",
+                photo: "assets/img/Anastasios-Pantazidis.png",
+                app: "assets/nomineesApplications/Anastasios-Pantazidis-app.pdf",
+                resume: "assets/resumes/CV-Anastasios-Pantazidis.pdf",
+                recommendations: []
+            },
+            {
+                country: "China",
+                name: "Mei Ngan Lei",
+                photo: "assets/img/avatar-women.png",
+                app: "assets/nomineesApplications/Mei-Ngan-Lei-app.pdf",
+                recommendations: []
+            },
+            {
+                country: "Peru",
+                name: "Manual Calderón",
+                photo: "assets/img/avatar-man.png",
+                recommendations: ["Nominated by PICKLEBALL PERÚ"]
+            },
+            {
+                country: "Mongolia",
+                name: "Gantulga Zagdsuren",
+                photo: "assets/img/Gantulga-Zagdsuren.png",
+                app: "assets/nomineesApplications/Gantulga-Zagdsuren-app.pdf",
+                resume: "assets/resumes/CV-Gantulga-Zagdsuren.pdf",
+                recommendations: ["Nominated by the Mongolian Pickleball Association"]
+            },
+            {
+                country: "South Africa",
+                name: "Kim Janice Wagner",
+                photo: "assets/img/Kim-Janice-Wagner.png",
+                app: "assets/nomineesApplications/Kim-Janice-Wagner-app.pdf",
+                resume: "assets/resumes/CV-Kim-Janice-Wagner.pdf",
+                recommendations: ["Nominated & Recommended by Seymour Rifkin", "Endorsed by Ryan Hill"]
+            },
+            {
+                country: "China",
+                name: "Nei Hei Lei",
+                photo: "assets/img/avatar-women.png",
+                app: "assets/nomineesApplications/Nei-Hei-Lei-app.pdf",
+                recommendations: ["Nominated by Ieong Meng Chao"]
+            },
+            {
+                country: "China",
+                name: "Ieong Meng Chao",
+                photo: "assets/img/avatar-man.png",
+                app: "assets/nomineesApplications/Ieong-Meng-Chao-app.pdf",
+                recommendations: []
+            }
+        ];
+
+        // Create nominee card function
+        function createNomineeCard(nominee) {
+            function getFlagCode(country) {
+                if (!country) return '';
+                const map = {
+                    'Poland': 'pl',
+                    'Iran': 'ir',
+                    'Spain': 'es',
+                    'India': 'in',
+                    'France': 'fr',
+                    'Pakistan': 'pk',
+                    'Malaysia': 'my',
+                    'United States': 'us',
+                    'Singapore': 'sg',
+                    'Scotland': 'gb-sct',
+                    'Uganda': 'ug',
+                    'Bulgaria': 'bg',
+                    'Nepal': 'np',
+                    'Russia': 'ru',
+                    'Hong Kong': 'hk',
+                    'China': 'cn',
+                    'Greece': 'gr',
+                    'Italy': 'it',
+                    'Japan': 'jp',
+                    'Mongolia': 'mn',
+                    'Peru': 'pe',
+                    'South Africa': 'za',
+                    'UK': 'gb',
+                };
+                return map[country] || '';
+            }
+
+            return `
+        <div class="card max-h-100 nominee-card mb-4" style="background: linear-gradient(135deg, #fff 0%, #f1faf6 60%); box-shadow: 0 2px 8px rgba(0,0,0,0.05); width: 320px; border: 1.5px solid #dee2e6;">
+          <div class="card-body text-center">
+            <div class="mb-2">
+              <span class="badge" style="font-size: 1rem; background: linear-gradient(135deg, #e3eaf3 20%, #f1faf6 100%); color: var(--bs-primary); border: 2px solid var(--bs-primary); border-radius: 0.5rem; padding: 0.35em 0.8em; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 0.5em;">
+                ${nominee.country ? `<img src='https://flagcdn.com/24x18/${getFlagCode(nominee.country)}.png' alt='${nominee.country} flag' style='height: 1.5em; width: auto; vertical-align: middle; border-radius: 2px; border: 1px solid #dee2e6; background: #fff; margin-right: 0.3em;'>` + nominee.country : ''}
+              </span>
+            </div>
+            <h3 class="mt-2 text-dark" style="text-align: center;">${nominee.name}</h3>
+            <div class="mb-3 d-flex justify-content-center">
+              ${nominee.photo ? `<img src="${nominee.photo.startsWith('http') ? nominee.photo : 'https://dev.theipf.org/' + nominee.photo}" class="img-fluid rounded shadow" alt="${nominee.name}" title="${nominee.name}" style="max-width: 240px; max-height: 240px; border: 2px solid #dee2e6; display: block; margin: 0 auto;">` : ""}
+            </div>
+            ${nominee.app ? `<a href="${nominee.app.startsWith('http') ? nominee.app : 'https://dev.theipf.org/' + nominee.app}" class="btn btn-primary mt-3" target="_blank" style="max-width: 220px; width: 100%; margin: 0 auto; display: block;"><span class="me-2"><i class="fa fa-download"></i></span> Application</a>` : ""}
+            ${nominee.resume ? `<a href="${nominee.resume.startsWith('http') ? nominee.resume : 'https://dev.theipf.org/' + nominee.resume}" class="btn btn-primary mt-3" target="_blank" style="max-width: 220px; width: 100%; margin: 0 auto; display: block;"><span class="me-2"><i class="fa fa-download"></i></span> Resume</a>` : ""}
+            ${Array.isArray(nominee.recommendations) ? (() => {
+                    const filteredRecs = nominee.recommendations.filter(Boolean);
+                    let referenceCounter = 0;
+                    return filteredRecs.map((rec, idx) => {
+                        // Check if this is a text endorsement/nomination or a file link
+                        if (rec.includes('Endorsed by') || rec.includes('Nominated by') || rec.includes('Recommended by')) {
+                            return `<div class="mt-3 mb-2" style="max-width: 220px; margin: 0 auto; padding: 12px 16px; background: linear-gradient(135deg, #f3e8ff 0%, #faf5ff 100%); border: 2px solid #8b5cf6; border-radius: 8px; font-size: 0.875rem; color: #5b21b6; text-align: center; box-shadow: 0 2px 4px rgba(139, 92, 246, 0.15); position: relative;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                      <i class="fas fa-award" style="color: #8b5cf6; font-size: 1rem;"></i>
+                      <span style="font-weight: 600; font-style: italic;">${rec}</span>
+                    </div>
+                  </div>`;
+                        } else {
+                            referenceCounter++;
+                            const totalFileRefs = filteredRecs.filter(r => !r.includes('Endorsed by') && !r.includes('Nominated by') && !r.includes('Recommended by')).length;
+                            const referenceLabel = totalFileRefs > 1 ? `Reference #${referenceCounter}` : 'Reference';
+                            const fileUrl = rec.startsWith('http') ? rec : 'https://dev.theipf.org/' + rec;
+                            return `<a href="${fileUrl}" class="btn btn-primary mt-3" target="_blank" style="max-width: 220px; width: 100%; margin: 0 auto; display: block;"><span class="me-2"><i class="fa fa-download"></i></span> ${referenceLabel}</a>`;
+                        }
+                    }).join('');
+                })() : ""}
+          </div>
+        </div>
+      `;
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            const cardsGrid = document.getElementById('nominee-cards');
+
+            // Sort nominees alphabetically by country name
+            const sortedNominees = nomineeData.slice().sort((a, b) => {
+                const countryA = (a.country || '').toUpperCase();
+                const countryB = (b.country || '').toUpperCase();
+                if (countryA < countryB) return -1;
+                if (countryA > countryB) return 1;
+                return 0;
+            });
+
+            // Render nominee cards
+            sortedNominees.forEach(function (nominee) {
+                const card = document.createElement('div');
+                card.innerHTML = createNomineeCard(nominee);
+                cardsGrid.appendChild(card.firstElementChild);
+            });
+
+            // Back to top button functionality
+            const backToTop = document.getElementById('back-to-top');
+
+            window.addEventListener('scroll', function () {
+                if (window.pageYOffset > 300) {
+                    backToTop.style.display = 'block';
+                } else {
+                    backToTop.style.display = 'none';
+                }
+            });
+
+            backToTop.addEventListener('click', function (e) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Initialize tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+
+</body>
+
+</html>
