@@ -127,6 +127,31 @@
             background-color: #4f46e5;
             border-color: #4f46e5;
         }
+
+        .continent-section {
+            margin-bottom: 3rem;
+        }
+
+        .continent-header {
+            border-bottom: 3px solid #e9ecef;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        #nominee-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .section-divider {
+            grid-column: 1 / -1;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #dee2e6 50%, transparent 100%);
+            margin: 2rem 0;
+        }
     </style>
 
     <!-- Title -->
@@ -177,8 +202,7 @@
             <!-- Dynamically render nominee cards -->
             <div class="row mb-8 pb-6 border-bottom">
                 <div class="col-12">
-                    <div id="nominee-cards"
-                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; justify-items: center;">
+                    <div id="nominee-cards">
                     </div>
                 </div>
             </div>
@@ -207,6 +231,32 @@
 
     <!-- Main JavaScript -->
     <script>
+        // Continental Regions Configuration
+        const continentalRegions = {
+            'Europe': {
+                countries: ['Spain', 'Scotland', 'Bulgaria', 'Russia', 'UK', 'France', 'Italy', 'Greece'],
+                color: '#3b82f6'
+            },
+            'Asia': {
+                countries: ['Pakistan', 'Malaysia', 'Singapore', 'Nepal', 'India', 'China', 'Japan', 'Mongolia'],
+                color: '#10b981'
+            },
+            'North America': {
+                countries: ['United States'],
+                color: '#f59e0b'
+            }
+        };
+
+        // Function to get continent by country
+        function getContinent(country) {
+            for (const [continent, data] of Object.entries(continentalRegions)) {
+                if (data.countries.includes(country)) {
+                    return continent;
+                }
+            }
+            return 'Other';
+        }
+
         // Nominee Data
         const nomineeData = [
             {
@@ -267,7 +317,7 @@
             {
                 country: "Nepal",
                 name: "Lt Col Phatya Bahadur Khadka",
-                photo: "assets/img/avatar-man.png",
+                photo: "assets/img/Phatya-Bahadur-Khadka.png",
                 app: "assets/nomineesApplications/Phatya-Bahadur-Khadka-app.pdf",
                 resume: "assets/resumes/CV-Phatya-Bahadur-Khadka.pdf",
                 recommendations: ["assets/endorsements/NominationLetter-Phatya-bahadur.pdf", "Nominated by Mukunda Prasad Bhandari"]
@@ -420,20 +470,73 @@
         document.addEventListener('DOMContentLoaded', function () {
             const cardsGrid = document.getElementById('nominee-cards');
 
-            // Sort nominees alphabetically by country name
-            const sortedNominees = nomineeData.slice().sort((a, b) => {
-                const countryA = (a.country || '').toUpperCase();
-                const countryB = (b.country || '').toUpperCase();
-                if (countryA < countryB) return -1;
-                if (countryA > countryB) return 1;
-                return 0;
+            // Group nominees by continent
+            const nomineesByContinent = {};
+            
+            nomineeData.forEach(nominee => {
+                const continent = getContinent(nominee.country);
+                if (!nomineesByContinent[continent]) {
+                    nomineesByContinent[continent] = [];
+                }
+                nomineesByContinent[continent].push(nominee);
             });
 
-            // Render nominee cards
-            sortedNominees.forEach(function (nominee) {
-                const card = document.createElement('div');
-                card.innerHTML = createNomineeCard(nominee);
-                cardsGrid.appendChild(card.firstElementChild);
+            // Sort nominees within each continent alphabetically by country name
+            Object.keys(nomineesByContinent).forEach(continent => {
+                nomineesByContinent[continent].sort((a, b) => {
+                    const countryA = (a.country || '').toUpperCase();
+                    const countryB = (b.country || '').toUpperCase();
+                    if (countryA < countryB) return -1;
+                    if (countryA > countryB) return 1;
+                    return 0;
+                });
+            });
+
+            // Render nominees grouped by continent
+            const continentOrder = ['Europe', 'Asia', 'North America', 'Other'];
+            
+            continentOrder.forEach((continent, continentIndex) => {
+                if (nomineesByContinent[continent] && nomineesByContinent[continent].length > 0) {
+                    // Add divider between sections (except for the first one)
+                    if (continentIndex > 0) {
+                        const divider = document.createElement('div');
+                        divider.className = 'section-divider';
+                        cardsGrid.appendChild(divider);
+                    }
+
+                    // Create continent section header
+                    const sectionHeader = document.createElement('div');
+                    sectionHeader.className = 'col-12 mb-4';
+                    sectionHeader.style.gridColumn = '1 / -1';
+                    
+                    const regionColor = continentalRegions[continent]?.color || '#6366f1';
+                    const continentIcon = {
+                        'Europe': 'fas fa-university',
+                        'Asia': 'fas fa-pagoda',
+                        'North America': 'fas fa-mountain',
+                        'Other': 'fas fa-globe'
+                    };
+                    
+                    sectionHeader.innerHTML = `
+                        <div class="text-center mb-4 mt-5">
+                            <div class="d-inline-flex align-items-center justify-content-center mb-3" style="background: linear-gradient(135deg, ${regionColor}15 0%, ${regionColor}05 100%); border: 2px solid ${regionColor}; border-radius: 50px; padding: 1rem 2rem;">
+                                <i class="${continentIcon[continent]}" style="color: ${regionColor}; font-size: 1.5rem; margin-right: 0.75rem;"></i>
+                                <h2 class="mb-0" style="color: ${regionColor}; font-weight: 700; font-size: 1.75rem;">${continent}</h2>
+                            </div>
+                            <p class="text-muted mb-0" style="font-size: 1.1rem;">
+                                ${nomineesByContinent[continent].length} nominee${nomineesByContinent[continent].length > 1 ? 's' : ''} from ${new Set(nomineesByContinent[continent].map(n => n.country)).size} countr${new Set(nomineesByContinent[continent].map(n => n.country)).size > 1 ? 'ies' : 'y'}
+                            </p>
+                        </div>
+                    `;
+                    cardsGrid.appendChild(sectionHeader);
+
+                    // Add nominees for this continent
+                    nomineesByContinent[continent].forEach(nominee => {
+                        const card = document.createElement('div');
+                        card.innerHTML = createNomineeCard(nominee);
+                        cardsGrid.appendChild(card.firstElementChild);
+                    });
+                }
             });
 
             // Back to top button functionality
