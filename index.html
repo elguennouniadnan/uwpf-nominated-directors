@@ -280,6 +280,7 @@
                 photo: "assets/img/MLlegal.jpg",
                 app: "assets/nomineesApplications/Marlon-Schulman-app.pdf",
                 resume: "assets/resumes/CV-Marlon-Schulman.pdf",
+                vision: "assets/video/Marlon-Schulman-Video.mp4",
                 recommendations: ["assets/endorsements/reference-marlon-schulman.pdf", "Endorsed by Arvind R. Prabhoo", "Recommended by Karen Mitchell"]
             },
             {
@@ -366,7 +367,7 @@
                 photo: "assets/img/Rika-Riordan.png",
                 app: "assets/nomineesApplications/Rika-Riordan-app.pdf",
                 resume: "assets/resumes/CV-Rika-Riordan.pdf",
-                recommendations: ["Recommended by Seymour Rifkin"]
+                recommendations: ["assets/resumes/Rika-Riordan-reference.pdf", "Recommended by Seymour Rifkin"]
             },
             {
                 country: "Greece",
@@ -431,28 +432,48 @@
             <div class="mb-3 d-flex justify-content-center">
               ${nominee.photo ? `<img src="${nominee.photo.startsWith('http') ? nominee.photo : 'https://dev.theipf.org/' + nominee.photo}" class="img-fluid rounded shadow" alt="${nominee.name}" title="${nominee.name}" style="max-width: 240px; max-height: 240px; border: 2px solid #dee2e6; display: block; margin: 0 auto;">` : ""}
             </div>
-            ${nominee.app ? `<a href="${nominee.app.startsWith('http') ? nominee.app : 'https://dev.theipf.org/' + nominee.app}" class="btn btn-primary mt-3" target="_blank" style="max-width: 220px; width: 100%; margin: 0 auto; display: block;"><span class="me-2"><i class="fa fa-download"></i></span> Application</a>` : ""}
-            ${nominee.resume ? `<a href="${nominee.resume.startsWith('http') ? nominee.resume : 'https://dev.theipf.org/' + nominee.resume}" class="btn btn-primary mt-3" target="_blank" style="max-width: 220px; width: 100%; margin: 0 auto; display: block;"><span class="me-2"><i class="fa fa-download"></i></span> Resume</a>` : ""}
+            ${nominee.app ? `<a href="${nominee.app.startsWith('http') ? nominee.app : 'https://dev.theipf.org/' + nominee.app}" class="btn btn-primary mt-3" target="_blank" style="max-width: 220px; width: 100%; margin: 0 auto; display: block;"><span class="me-2"><i class="fas fa-file-alt"></i></span> Application</a>` : ""}
+            ${nominee.resume ? `<a href="${nominee.resume.startsWith('http') ? nominee.resume : 'https://dev.theipf.org/' + nominee.resume}" class="btn btn-primary mt-3" target="_blank" style="max-width: 220px; width: 100%; margin: 0 auto; display: block;"><span class="me-2"><i class="fas fa-user-tie"></i></span> Resume</a>` : ""}
             ${Array.isArray(nominee.recommendations) ? (() => {
                     const filteredRecs = nominee.recommendations.filter(Boolean);
                     let referenceCounter = 0;
-                    return filteredRecs.map((rec, idx) => {
-                        // Check if this is a text endorsement/nomination or a file link
-                        if (rec.includes('Endorsed by') || rec.includes('Nominated by') || rec.includes('Recommended by')) {
-                            return `<div class="mt-3 mb-2" style="max-width: 220px; margin: 0 auto; padding: 12px 16px; background: linear-gradient(135deg, #f3e8ff 0%, #faf5ff 100%); border: 2px solid #8b5cf6; border-radius: 8px; font-size: 0.875rem; color: #5b21b6; text-align: center; box-shadow: 0 2px 4px rgba(139, 92, 246, 0.15); position: relative;">
+                    
+                    // First, render all reference file buttons
+                    const referenceButtons = filteredRecs.filter(rec => !rec.includes('Endorsed by') && !rec.includes('Nominated by') && !rec.includes('Recommended by')).map(rec => {
+                        referenceCounter++;
+                        const totalFileRefs = filteredRecs.filter(r => !r.includes('Endorsed by') && !r.includes('Nominated by') && !r.includes('Recommended by')).length;
+                        const referenceLabel = totalFileRefs > 1 ? `Reference #${referenceCounter}` : 'Reference';
+                        const fileUrl = rec.startsWith('http') ? rec : 'https://dev.theipf.org/' + rec;
+                        return `<a href="${fileUrl}" class="btn btn-primary mt-3" target="_blank" style="max-width: 220px; width: 100%; margin: 0 auto; display: block;"><span class="me-2"><i class="fas fa-file-signature"></i></span> ${referenceLabel}</a>`;
+                    }).join('');
+                    
+                    // Then, render endorsement/recommendation text labels
+                    const endorsementLabels = filteredRecs.filter(rec => rec.includes('Endorsed by') || rec.includes('Nominated by') || rec.includes('Recommended by')).map(rec => {
+                        return `<div class="mt-3 mb-2" style="max-width: 220px; margin: 0 auto; padding: 12px 16px; background: linear-gradient(135deg, #f3e8ff 0%, #faf5ff 100%); border: 2px solid #8b5cf6; border-radius: 8px; font-size: 0.875rem; color: #5b21b6; text-align: center; box-shadow: 0 2px 4px rgba(139, 92, 246, 0.15); position: relative;">
                     <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
                       <i class="fas fa-award" style="color: #8b5cf6; font-size: 1rem;"></i>
                       <span style="font-weight: 600; font-style: italic;">${rec}</span>
                     </div>
                   </div>`;
-                        } else {
-                            referenceCounter++;
-                            const totalFileRefs = filteredRecs.filter(r => !r.includes('Endorsed by') && !r.includes('Nominated by') && !r.includes('Recommended by')).length;
-                            const referenceLabel = totalFileRefs > 1 ? `Reference #${referenceCounter}` : 'Reference';
-                            const fileUrl = rec.startsWith('http') ? rec : 'https://dev.theipf.org/' + rec;
-                            return `<a href="${fileUrl}" class="btn btn-primary mt-3" target="_blank" style="max-width: 220px; width: 100%; margin: 0 auto; display: block;"><span class="me-2"><i class="fa fa-download"></i></span> ${referenceLabel}</a>`;
-                        }
                     }).join('');
+                    
+                    return referenceButtons;
+                })() : ""}
+            ${nominee.vision ? `<a href="${nominee.vision.startsWith('http') ? nominee.vision : 'https://dev.theipf.org/' + nominee.vision}" class="btn btn-success mt-3" target="_blank" style="max-width: 220px; width: 100%; margin: 0 auto; display: block;"><span class="me-2"><i class="fas fa-video"></i></span> Vision Statement</a>` : ""}
+            ${Array.isArray(nominee.recommendations) ? (() => {
+                    const filteredRecs = nominee.recommendations.filter(Boolean);
+                    
+                    // Render endorsement/recommendation text labels
+                    const endorsementLabels = filteredRecs.filter(rec => rec.includes('Endorsed by') || rec.includes('Nominated by') || rec.includes('Recommended by')).map(rec => {
+                        return `<div class="mt-3 mb-2" style="max-width: 220px; margin: 0 auto; padding: 12px 16px; background: linear-gradient(135deg, #f3e8ff 0%, #faf5ff 100%); border: 2px solid #8b5cf6; border-radius: 8px; font-size: 0.875rem; color: #5b21b6; text-align: center; box-shadow: 0 2px 4px rgba(139, 92, 246, 0.15); position: relative;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                      <i class="fas fa-award" style="color: #8b5cf6; font-size: 1rem;"></i>
+                      <span style="font-weight: 600; font-style: italic;">${rec}</span>
+                    </div>
+                  </div>`;
+                    }).join('');
+                    
+                    return endorsementLabels;
                 })() : ""}
           </div>
         </div>
