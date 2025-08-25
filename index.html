@@ -273,7 +273,7 @@
                 name: "Kelvin Yii Lee Wuen",
                 photo: "assets/img/Kelvin-YiI.png",
                 resume: "assets/resumes/CV-Kelvin-Yii.pdf",
-                recommendations: ["Nominated By Pickleball Malaysia", "Recommended by Arvind R. Prabhoo"]
+                recommendations: ["Nominated by Pickleball Malaysia", "Recommended by Arvind R. Prabhoo"]
             },
             {
                 country: "United States",
@@ -446,9 +446,9 @@
                     let referenceCounter = 0;
                     
                     // First, render all reference file buttons
-                    const referenceButtons = filteredRecs.filter(rec => !rec.includes('Endorsed by') && !rec.includes('Nominated by') && !rec.includes('Recommended by')).map(rec => {
+                    const referenceButtons = filteredRecs.filter(rec => !rec.toLowerCase().includes('endorsed by') && !rec.toLowerCase().includes('nominated by') && !rec.toLowerCase().includes('recommended by')).map(rec => {
                         referenceCounter++;
-                        const totalFileRefs = filteredRecs.filter(r => !r.includes('Endorsed by') && !r.includes('Nominated by') && !r.includes('Recommended by')).length;
+                        const totalFileRefs = filteredRecs.filter(r => !r.toLowerCase().includes('endorsed by') && !r.toLowerCase().includes('nominated by') && !r.toLowerCase().includes('recommended by')).length;
                         const referenceLabel = totalFileRefs > 1 ? `Reference #${referenceCounter}` : 'Reference';
                         const fileUrl = rec.startsWith('http') ? rec : 'https://dev.theipf.org/' + rec;
                         return `<a href="${fileUrl}" class="btn btn-primary mt-3" target="_blank" style="max-width: 220px; width: 100%; margin: 0 auto; display: block;"><span class="me-2"><i class="fas fa-file-signature"></i></span> ${referenceLabel}</a>`;
