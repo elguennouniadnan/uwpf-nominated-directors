@@ -341,7 +341,8 @@
                 country: "France",
                 name: "Jean Paul Bagot",
                 photo: "assets/img/Jean-Paul-Bagot.png",
-                app: "assets/nomineesApplications/Jean-Paul-Bagot-app .pdf",
+                app: "assets/nomineesApplications/Jean-Paul-Bagot-app.pdf",
+                vision: "https://youtube.com/shorts/l3Of3BUVJag?feature=share",
                 resume: "assets/resumes/CV-Jean-Paul-Bagot.pdf",
                 recommendations: ["Endorsed by Pierre Obozinski"]
             },
@@ -459,7 +460,13 @@
                     
                     return referenceButtons;
                 })() : ""}
-            ${nominee.vision ? `<a href="${nominee.vision.startsWith('http') ? nominee.vision : 'https://dev.theipf.org/' + nominee.vision}" class="btn btn-success mt-3" target="_blank" style="max-width: 220px; width: 100%; margin: 0 auto; display: block;"><span class="me-2"><i class="fas fa-video"></i></span> Vision Statement</a>` : ""}
+            ${nominee.vision ? (() => {
+                const visionUrl = nominee.vision.startsWith('http') ? nominee.vision : 'https://dev.theipf.org/' + nominee.vision;
+                const isVideoFile = nominee.vision.toLowerCase().includes('.mp4') || nominee.vision.toLowerCase().includes('.mov');
+                const buttonText = isVideoFile ? 'Vision Video' : 'Vision Statement';
+                const iconClass = isVideoFile ? 'fas fa-play-circle' : 'fas fa-video';
+                return `<a href="${visionUrl}" class="btn btn-success mt-3" target="_blank" style="max-width: 220px; width: 100%; margin: 0 auto; display: block;"><span class="me-2"><i class="${iconClass}"></i></span> ${buttonText}</a>`;
+            })() : ""}
             ${Array.isArray(nominee.recommendations) ? (() => {
                     const filteredRecs = nominee.recommendations.filter(Boolean);
                     
