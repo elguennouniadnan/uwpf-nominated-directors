@@ -464,7 +464,7 @@
             ${nominee.vision ? (() => {
                 const visionUrl = nominee.vision.startsWith('http') ? nominee.vision : 'https://dev.theipf.org/' + nominee.vision;
                 const isVideoFile = nominee.vision.toLowerCase().includes('.mp4') || nominee.vision.toLowerCase().includes('.mov');
-                const buttonText = 'Candidate Presentation';
+                const buttonText = 'Introduction Video';
                 const iconClass = isVideoFile ? 'fas fa-play-circle' : 'fas fa-video';
                 return `<a href="${visionUrl}" class="btn btn-success mt-3" target="_blank" style="max-width: 220px; width: 100%; margin: 0 auto; display: block;"><span class="me-2"><i class="${iconClass}"></i></span> ${buttonText}</a>`;
             })() : ""}
