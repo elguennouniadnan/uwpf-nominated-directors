@@ -257,7 +257,7 @@
                 color: '#3b82f6'
             },
             'Asia': {
-                countries: ['Pakistan', 'Malaysia', 'Singapore', 'Nepal', 'India', 'China', 'Japan', 'Mongolia', 'Taiwan'],
+                countries: ['Pakistan', 'Malaysia', 'Nepal', 'India', 'China', 'Japan', 'Mongolia', 'Taiwan', 'Asia'],
                 color: '#10b981'
             },
             'Americas': {
@@ -308,7 +308,7 @@
                 recommendations: ["assets/endorsements/reference-marlon-schulman.pdf", "Endorsed by Arvind R. Prabhoo", "Recommended by Karen Mitchell"]
             },
             {
-                country: "Singapore",
+                country: "Asia",
                 name: "Jimmy Tan",
                 photo: "assets/img/Jimmy-Tan.png",
                 app: "assets/nomineesApplications/Jimmy-Tan-app.pdf",
@@ -438,6 +438,7 @@
         function createNomineeCard(nominee) {
             function getFlagCode(country) {
                 if (!country) return '';
+                if (country === 'Asia') return ''; // No flag for Asia
                 const map = {
                     'Poland': 'pl',
                     'Iran': 'ir',
@@ -473,7 +474,10 @@
           <div class="card-body text-center">
             <div class="mb-2">
               <span class="badge" style="font-size: 1rem; background: linear-gradient(135deg, #e3eaf3 20%, #f1faf6 100%); color: var(--bs-primary); border: 2px solid var(--bs-primary); border-radius: 0.5rem; padding: 0.35em 0.8em; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 0.5em;">
-                ${nominee.country ? `<img src='https://flagcdn.com/24x18/${getFlagCode(nominee.country)}.png' alt='${nominee.country} flag' style='height: 1.5em; width: auto; vertical-align: middle; border-radius: 2px; border: 1px solid #dee2e6; background: #fff; margin-right: 0.3em;'>` + nominee.country : ''}
+                ${nominee.country ? (nominee.country === 'Asia' ? 
+                    `<i class="fas fa-globe-asia" style="color: var(--bs-primary); margin-right: 0.3em; font-size: 1.2em;"></i>` + nominee.country :
+                    `<img src='https://flagcdn.com/24x18/${getFlagCode(nominee.country)}.png' alt='${nominee.country} flag' style='height: 1.5em; width: auto; vertical-align: middle; border-radius: 2px; border: 1px solid #dee2e6; background: #fff; margin-right: 0.3em;'>` + nominee.country
+                ) : ''}
               </span>
             </div>
             <h3 class="mt-2 text-dark" style="text-align: center;">${nominee.name}</h3>
