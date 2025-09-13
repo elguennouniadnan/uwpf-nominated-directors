@@ -9,3 +9,4 @@ analyze-screenshots.js
 Screenshot*.png
 *.png
 !WPF*.png
+.vercel
